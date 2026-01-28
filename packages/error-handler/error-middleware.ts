@@ -1,4 +1,4 @@
-import { AppError } from "."
+import { AppError } from "./index"
 import { Request, Response } from "express";
 
 export const errorMiddleware = (err: Error, req: Request, res: Response, next: any) => {

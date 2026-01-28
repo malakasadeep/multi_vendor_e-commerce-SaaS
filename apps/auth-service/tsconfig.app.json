@@ -2,15 +2,15 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": [
-      "node",
-      "express"
-    ],
-    "rootDir": "src",
+    "types": ["node", "express"],
+    "rootDir": "../../",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "../../packages/**/*.ts",
+    "../../packages/**/*.js",
+    "../../generated/prisma/**/*.ts"
   ],
   "exclude": [
     "out-tsc",
