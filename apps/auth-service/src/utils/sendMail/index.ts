@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-import ejs from "ejs";
-import path from "path";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+import ejs from 'ejs';
+import path from 'path';
 
 dotenv.config();
 
@@ -18,16 +18,16 @@ const transporter = nodemailer.createTransport({
 
 const renderEmailTemplate = async (
   templateName: string,
-  data: Record<string, any>,
+  data: Record<string, any>
 ): Promise<string> => {
   const templatePath = path.join(
     process.cwd(),
-    "apps",
-    "auth-service",
-    "src",
-    "utils",
-    "email-templates",
-    `${templateName}.ejs`,
+    'apps',
+    'auth-service',
+    'src',
+    'utils',
+    'email-templates',
+    `${templateName}.ejs`
   );
   return ejs.renderFile(templatePath, data);
 };
@@ -36,7 +36,7 @@ export const sendEmail = async (
   to: string,
   subject: string,
   templateName: string,
-  data: Record<string, any>,
+  data: Record<string, any>
 ) => {
   try {
     const html = await renderEmailTemplate(templateName, data);
@@ -48,7 +48,7 @@ export const sendEmail = async (
     });
     return true;
   } catch (error) {
-    console.log("Error sending email:", error);
+    console.log('Error sending email:', error);
     return false;
   }
 };

@@ -29,12 +29,11 @@
           }
         }
       },
-      "test":{
-        "options":{
+      "test": {
+        "options": {
           "passWithNoTests": true
         }
       }
     }
   }
-
 }

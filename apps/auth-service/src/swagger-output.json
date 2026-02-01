@@ -6,11 +6,15 @@
     "version": "1.0.0"
   },
   "host": "localhost:6001",
-  "servers": ["http://localhost:6001"],
-  "basePath": "/",
-  "schemes": ["http"],
+  "servers": [
+    "http://localhost:6001"
+  ],
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
   "paths": {
-    "/api/user-registration": {
+    "/user-registration": {
       "post": {
         "description": "",
         "parameters": [
@@ -21,13 +25,70 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "Malaka"
+                  "example": "any"
                 },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/verify-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "otp": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/login-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
                 "email": {
                   "example": "p.g.m.sadeep2001@gmail.com"
                 },
                 "password": {
-                  "example": "password"
+                  "example": "12345678"
                 }
               }
             }
