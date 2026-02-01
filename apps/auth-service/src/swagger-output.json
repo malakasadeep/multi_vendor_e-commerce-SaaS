@@ -1,0 +1,44 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Auth Service API",
+    "description": "API documentation for Auth Service",
+    "version": "1.0.0"
+  },
+  "host": "localhost:6001",
+  "servers": ["http://localhost:6001"],
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/api/user-registration": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Malaka"
+                },
+                "email": {
+                  "example": "p.g.m.sadeep2001@gmail.com"
+                },
+                "password": {
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
