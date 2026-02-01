@@ -5,11 +5,11 @@
     "description": "API documentation for Auth Service",
     "version": "1.0.0"
   },
-  "host": "localhost:6001",
+  "host": "localhost:3000",
   "servers": [
     "http://localhost:6001"
   ],
-  "basePath": "/api",
+  "basePath": "/",
   "schemes": [
     "http"
   ],
@@ -85,10 +85,57 @@
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "p.g.m.sadeep2001@gmail.com"
+                  "example": "any"
                 },
                 "password": {
-                  "example": "12345678"
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/forgot-password-user": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/verify-forgot-password-user": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/reset-password-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "newPassword": {
+                  "example": "any"
                 }
               }
             }
