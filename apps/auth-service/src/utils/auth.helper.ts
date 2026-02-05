@@ -146,12 +146,10 @@ export const veryfyUserForgotPasswordOtp = async (
     }
     await verfyOtp(email, otp);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: 'OTP verified successfully. You can now reset your password.',
-      });
+    res.status(200).json({
+      success: true,
+      message: 'OTP verified successfully. You can now reset your password.',
+    });
   } catch (error) {
     return next(error);
   }

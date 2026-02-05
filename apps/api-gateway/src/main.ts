@@ -24,18 +24,16 @@ app.use(
 );
 
 app.use(morgan('dev'));
-app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use(cookieParser());
 app.set('trust proxy', 1);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: (req: any) => (req.user ? 1000 : 100), // limit each IP to 100 requests per windowMs for unauthenticated users, 1000 for authenticated
+  max: 100, // limit each IP to 100 requests per windowMs
   message: { error: 'Too many requests, please try again later.' },
   standardHeaders: true,
-  legacyHeaders: true,
-  keyGenerator: (req: any) => req.ip,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
 });
 
 app.use(limiter);
@@ -44,10 +42,30 @@ app.get('/gateway-health', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
 
+// Auth Service Proxy - Don't use body parsers before proxy middleware
 app.use(
-  '/',
-  createProxyMiddleware({ target: 'http://localhost:6001', changeOrigin: true })
-); // Auth Service
+  '/api',
+  createProxyMiddleware({
+    target: 'http://localhost:6001',
+    changeOrigin: true,
+    timeout: 60000,
+    proxyTimeout: 60000,
+    onProxyReq: (proxyReq, req, res) => {
+      console.log(
+        `[Proxy] ${req.method} ${req.url} -> http://localhost:6001${req.url}`
+      );
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log(`[Proxy Response] ${proxyRes.statusCode} from ${req.url}`);
+    },
+    onError: (err, req, res) => {
+      console.error('Proxy error:', err);
+      (res as express.Response)
+        .status(500)
+        .json({ error: 'Proxy error', message: err.message });
+    },
+  })
+);
 
 const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {

@@ -6,13 +6,9 @@
     "version": "1.0.0"
   },
   "host": "localhost:3000",
-  "servers": [
-    "http://localhost:6001"
-  ],
+  "servers": ["http://localhost:6001"],
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "paths": {
     "/user-registration": {
       "post": {
