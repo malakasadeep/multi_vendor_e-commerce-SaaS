@@ -1,8 +1,9 @@
 'use client';
 import { NAV_ITEMS } from 'apps/user-ui/src/configs/constants';
-import { AlignLeft, Heart, ShoppingCart, User2Icon } from 'lucide-react';
+import { AlignLeft, Heart, ShoppingCart, User2Icon, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import useUser from '../../../hooks/useUser';
 
 interface NavItemTypes {
   title: string;
@@ -12,6 +13,7 @@ interface NavItemTypes {
 function HeaderBottom() {
   const [show, setShow] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const { user, isLoading, isError } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,17 +61,54 @@ function HeaderBottom() {
         <div>
           {isSticky && (
             <div className="flex items-center gap-8">
-              <div className="flex items-center gap-2">
-                <Link href={'/login'}>
-                  <User2Icon size={25} />
-                </Link>
-              </div>
-              <Link href={'/login'}>
-                <div>
-                  <span className="block font-medium">Hello,</span>
-                  <span className="block font-semibold">Sign In</span>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <User2Icon size={25} className="animate-pulse" />
+                  <div>
+                    <span className="block font-medium">Loading...</span>
+                    <span className="block font-semibold text-gray-400">Please wait</span>
+                  </div>
                 </div>
-              </Link>
+              ) : user && !isError ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Link href={'/profile'}>
+                      <User2Icon size={25} className="text-blue-600" />
+                    </Link>
+                  </div>
+                  <Link href={'/profile'}>
+                    <div>
+                      <span className="block font-medium">Hello,</span>
+                      <span className="block font-semibold">{user.firstName || user.name || 'User'}</span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      // Add logout logic here
+                      localStorage.removeItem('token');
+                      window.location.reload();
+                    }}
+                    className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors"
+                    title="Logout"
+                  >
+                    <LogOut size={20} />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Link href={'/login'}>
+                      <User2Icon size={25} />
+                    </Link>
+                  </div>
+                  <Link href={'/login'}>
+                    <div>
+                      <span className="block font-medium">Hello,</span>
+                      <span className="block font-semibold">Sign In</span>
+                    </div>
+                  </Link>
+                </>
+              )}
               <Link href={'/wishlist'} className="relative cursor-pointer">
                 <Heart size={25} />
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">

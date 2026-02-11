@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { set, useForm } from 'react-hook-form';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 type FormData = {
     name: string;
@@ -58,6 +58,22 @@ function SignUpPage() {
         },
         onError: (error: any) => {
             setServerError(error?.response?.data?.message || 'Registration failed. Please try again.');
+        }
+    })
+
+    const verifyOtpMutation = useMutation({
+        mutationFn: async () => {
+            if (!userData) return;
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/verify-user`,
+                {
+                    ...userData,
+                    otp: otp.join('')
+                }
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            router.push('/login');
         }
     })
 
@@ -188,8 +204,8 @@ function SignUpPage() {
                                     />
                                 ))}
                             </div>
-                            <button className='w-full bg-blue-500 text-white py-2 hover:bg-blue-600 transition duration-200 font-medium mb-4'>
-                                Verify OTP
+                            <button disabled={verifyOtpMutation.isPending} onClick={() => verifyOtpMutation.mutate()} className='w-full bg-blue-500 text-white py-2 hover:bg-blue-600 transition duration-200 font-medium mb-4'>
+                                {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
                             </button>
                             <p className='text-center text-sm mt-4'>
                                 {canResend ? (
@@ -203,6 +219,11 @@ function SignUpPage() {
                                     `Resend OTP in ${timer} seconds`
                                 )}
                             </p>
+                            {
+                                verifyOtpMutation?.isError && verifyOtpMutation.error instanceof AxiosError && (
+                                    <p className='text-red-500 text-sm mb-4'>{verifyOtpMutation.error.response?.data?.message || verifyOtpMutation.error.message}</p>
+                                )
+                            }
                         </div>
                     )}
 
