@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  //url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Image {
@@ -13,7 +13,9 @@ model Image {
   file_id   String
   name      String
   userId    String   @db.ObjectId @unique
+  shopId    String?  @db.ObjectId @unique
   users     User     @relation(fields: [userId], references: [id])
+  shops     Shops?   @relation(fields: [shopId], references: [id])
 }
 
 
@@ -26,4 +28,52 @@ model User {
   avatar    Image?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  shopReviews shopReviews[]
+}
+
+model shopReviews {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Float
+  reviews  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  shopsId   String?  @db.ObjectId
+  shops     Shops?   @relation(fields: [shopsId], references: [id])
+}
+
+model Shops {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  bio String?
+  category String
+  avatar Image?
+  coverBanner String?
+  address String
+  openingHours String?
+  website String?
+  socialLinks Json[]
+  ratings Float @default(0)
+  reviews shopReviews[]
+  sellerId String? @db.ObjectId @unique
+  sellers Sellers? @relation(fields: [sellerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+model Sellers {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  phone_number String
+  country   String
+  password  String
+  stripeId  String?
+  shop     Shops? 
+  shopid String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  shopId    String?  @db.ObjectId
 }
