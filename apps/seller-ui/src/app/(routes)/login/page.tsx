@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 type FormData = {
     email: string;
@@ -23,14 +23,14 @@ function LoginPage() {
 
     const loginMuttion = useMutation({
         mutationFn: async (data: FormData) => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/login-user`, data, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/login-seller`, data, {
                 withCredentials: true,
             })
             return response.data;
         },
         onSuccess: (data) => {
             setServerError(null);
-            router.push('/');
+            router.push('/dashboard');
         },
         onError: (error: AxiosError) => {
             const errorMessage = (error.response?.data as { message?: string })?.message || "An error occurred during login.";
@@ -40,7 +40,7 @@ function LoginPage() {
 
     const onSubmit = async (data: FormData) => {
         loginMuttion.mutate(data);
-     };
+    };
     return (
         <div className='w-full py-10 min-h-screen bg-[#f1f1f1]'>
             <h1 className='text-4xl font-Poppins font-semibold text-black text-center'>
